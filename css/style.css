@@ -1,0 +1,118 @@
+/* Reseteo básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fondo de la página usando un tono oscuro elegante */
+body {
+    background-color: #1a1a1a; /* Negro suave */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contenedor principal */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+/* Tarjeta blanca para el formulario */
+.login-card {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+/* Ajustes del logo */
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 180px;
+    height: auto;
+}
+
+/* Textos */
+h2 {
+    color: #000000;
+    margin-bottom: 5px;
+    font-size: 24px;
+}
+
+p {
+    color: #666666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+/* Grupos de inputs */
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    color: #000000;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #e30a17; /* Rojo Fuencor */
+}
+
+/* Botón Rojo Fuencor */
+.btn-rojo {
+    width: 100%;
+    background-color: #e30a17; /* Rojo extraído del logo */
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-rojo:hover {
+    background-color: #b30812; /* Rojo más oscuro al pasar el mouse */
+}
+
+/* Enlaces */
+.footer-text {
+    margin-top: 20px;
+}
+
+.footer-text a {
+    color: #333333;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.3s;
+}
+
+.footer-text a:hover {
+    color: #e30a17;
+}
