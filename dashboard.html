@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Fuencor Inmobiliaria</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dashboard-body">
+    <!-- Barra de Navegación -->
+    <nav class="navbar">
+        <img src="assets/image_0880c1.png" alt="Logo Fuencor" class="nav-logo">
+        <div class="nav-links">
+            <span>Hola, Agente</span>
+            <a href="index.html" class="btn-salir">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <h2>Propiedades Disponibles</h2>
+            <button id="btnNuevaPropiedad" class="btn-rojo">+ Registrar Casa</button>
+        </div>
+
+        <!-- Cuadrícula de Casas -->
+        <div class="grid-propiedades" id="listaPropiedades">
+            <!-- Casa de ejemplo -->
+            <div class="card-propiedad">
+                <div class="card-imagen" style="background-color: #ddd;">🏠</div>
+                <div class="card-info">
+                    <h3>Casa en Zona Centro</h3>
+                    <p class="precio">$1,500,000 MXN</p>
+                    <p class="detalles">3 Recámaras • 2 Baños</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Ventana Modal para Registrar -->
+    <div id="modalRegistro" class="modal">
+        <div class="modal-content">
+            <span class="cerrar-modal">&times;</span>
+            <h2>Registrar Nueva Propiedad</h2>
+            <form id="formPropiedad">
+                <div class="input-group">
+                    <label>Título de la Propiedad</label>
+                    <input type="text" id="tituloCasa" required>
+                </div>
+                <div class="input-group">
+                    <label>Precio (MXN)</label>
+                    <input type="number" id="precioCasa" required>
+                </div>
+                <div class="input-group">
+                    <label>Detalles (Ej. 2 Recámaras, 1 Baño)</label>
+                    <input type="text" id="detallesCasa" required>
+                </div>
+                <button type="submit" class="btn-rojo">Guardar Propiedad</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
