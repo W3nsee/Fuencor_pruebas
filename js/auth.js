@@ -1,33 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- 1. SIMULACIÓN DE BASE DE DATOS (Solo para pruebas) ---
+    // Esto se ejecuta al abrir la página. Crea una "tabla" de usuarios.
+    function iniciarBaseDeDatos() {
+        if (!localStorage.getItem('bd_fuencor_usuarios')) {
+            const usuarios = [
+                {
+                    usuario: "ADMIN",
+                    contrasena: "eavxr54hA"
+                }
+            ];
+            // Guardamos la información en el navegador simulando la DB
+            localStorage.setItem('bd_fuencor_usuarios', JSON.stringify(usuarios));
+        }
+    }
+    
+    iniciarBaseDeDatos();
+
+    // --- 2. LÓGICA DE INICIO DE SESIÓN ---
     const loginForm = document.getElementById('loginForm');
     const alerta = document.getElementById('alertaPersonalizada');
 
     loginForm.addEventListener('submit', (event) => {
-        // Previene que la página se recargue
         event.preventDefault();
 
-        const email = document.getElementById('email').value;
+        // Obtener los datos que escribió la persona
+        const usuarioIngresado = document.getElementById('usuario').value;
+        const passwordIngresada = document.getElementById('password').value;
         const boton = document.querySelector('.btn-rojo');
 
-        // Estado de carga
+        // Efectos visuales de carga
         boton.textContent = "Verificando...";
-        boton.disabled = true; // Desactivar botón para evitar doble clic
-        alerta.className = 'alerta oculta'; // Ocultar alertas previas
+        boton.disabled = true; 
+        alerta.className = 'alerta oculta'; 
         
-        // Simular conexión a base de datos
+        // Retardo para simular la conexión a internet
         setTimeout(() => {
-            // Mostrar notificación integrada en la página
-            alerta.textContent = "Acceso correcto. Redirigiendo...";
-            alerta.className = 'alerta exito';
             
-            // Regresar el botón a la normalidad
-            boton.textContent = "Entrar al Sistema";
-            boton.disabled = false;
+            // CONECTAR A LA BASE DE DATOS Y BUSCAR EL USUARIO
+            const baseDeDatos = JSON.parse(localStorage.getItem('bd_fuencor_usuarios'));
             
-            // Esperar un momento breve para que se vea el mensaje y luego redirigir
-            setTimeout(() => {
-                window.location.href = 'dashboard.html'; 
-            }, 1200);
+            // Verificar si los datos coinciden
+            const usuarioValido = baseDeDatos.find(
+                (user) => user.usuario === usuarioIngresado && user.contrasena === passwordIngresada
+            );
+
+            if (usuarioValido) {
+                // ÉXITO: Los datos son correctos
+                alerta.textContent = "Acceso correcto. Redirigiendo...";
+                alerta.className = 'alerta exito';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html'; 
+                }, 1200);
+
+            } else {
+                // ERROR: Datos incorrectos
+                alerta.textContent = "Usuario o contraseña incorrectos.";
+                alerta.className = 'alerta error';
+                
+                // Habilitar el botón para que intente de nuevo
+                boton.textContent = "Entrar al Sistema";
+                boton.disabled = false;
+            }
             
         }, 800);
     });
