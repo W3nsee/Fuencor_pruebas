@@ -18,7 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             alert(`¡Bienvenido al sistema de Fuencor, ${email}!`);
             boton.textContent = "Entrar al Sistema";
-            // window.location.href = 'dashboard.html'; // Redirección futura
+            
+            // Redirección directa al panel de control de los agentes
+            window.location.href = 'dashboard.html'; 
+            
         }, 1000);
     });
 });
