@@ -1,4 +1,3 @@
-// Importamos la conexión a tu base de datos y las herramientas de Firebase
 import { db } from './firebase.js';
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -12,33 +11,32 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        const usuarioIngresado = document.getElementById('usuario').value;
+        const correoIngresado = document.getElementById('correo').value;
         const passwordIngresada = document.getElementById('password').value;
         const boton = document.querySelector('.btn-rojo');
 
-        // Efectos visuales de carga
         boton.textContent = "Verificando en la nube...";
         boton.disabled = true; 
         alerta.className = 'alerta oculta'; 
         
         try {
-            // Buscamos en la colección "usuarios" de Firebase
+            // Buscamos en la colección "usuarios"
             const querySnapshot = await getDocs(collection(db, "usuarios"));
             let usuarioValido = false;
+            let rolDelUsuario = "agente"; // Rol por defecto
 
             querySnapshot.forEach((doc) => {
                 const user = doc.data();
-                if (user.usuario === usuarioIngresado && user.contrasena === passwordIngresada) {
+                if (user.correo === correoIngresado && user.contrasena === passwordIngresada) {
                     usuarioValido = true;
+                    rolDelUsuario = user.rol; // Extraemos el rol que pusiste en la base de datos
                 }
             });
 
-            // Puerta trasera de emergencia de administrador
-            if (usuarioIngresado === "ADMIN" && passwordIngresada === "eavxr54hA") {
-                usuarioValido = true;
-            }
-
             if (usuarioValido) {
+                // Guardamos el rol en la memoria temporal del navegador
+                localStorage.setItem('rolActivo', rolDelUsuario);
+
                 alerta.textContent = "Acceso correcto. Redirigiendo...";
                 alerta.className = 'alerta exito';
                 
@@ -47,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, 1200);
 
             } else {
-                alerta.textContent = "Usuario o contraseña incorrectos.";
+                alerta.textContent = "Correo o contraseña incorrectos.";
                 alerta.className = 'alerta error';
                 boton.textContent = "Entrar al Sistema";
                 boton.disabled = false;

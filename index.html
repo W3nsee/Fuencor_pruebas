@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fuencor Inmobiliaria - Acceso Agentes</title>
+    <title>Fuencor Inmobiliaria - Acceso</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -13,15 +13,15 @@
                 <img src="assets/image_0880c1.png" alt="Logo Fuencor Inmobiliaria" class="logo">
             </div>
             
-            <h2>Portal de Agentes</h2>
+            <h2>Portal Inmobiliario</h2>
             <p>Inicia sesión para gestionar propiedades</p>
 
             <div id="alertaPersonalizada" class="alerta oculta"></div>
 
             <form id="loginForm">
                 <div class="input-group">
-                    <label for="usuario">Usuario / Agente</label>
-                    <input type="text" id="usuario" placeholder="Ej. ADMIN" required>
+                    <label for="correo">Correo Electrónico</label>
+                    <input type="email" id="correo" placeholder="agente@fuencor.com" required>
                 </div>
                 
                 <div class="input-group">
@@ -35,7 +35,6 @@
         </div>
     </div>
 
-    <!-- Archivo principal de lógica como módulo -->
     <script type="module" src="js/auth.js"></script>
 </body>
 </html>

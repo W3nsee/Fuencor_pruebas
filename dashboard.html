@@ -11,25 +11,35 @@
     <nav class="navbar">
         <img src="assets/image_0880c1.png" alt="Logo Fuencor" class="nav-logo">
         <div class="nav-links">
-            <span>Hola, Agente</span>
-            <a href="index.html" class="btn-salir">Cerrar Sesión</a>
+            <span id="saludoUsuario">Hola</span>
+            <a href="#" id="btnCerrarSesion" class="btn-salir">Cerrar Sesión</a>
         </div>
     </nav>
 
     <!-- Contenido Principal -->
     <main class="dashboard-container">
+        
+        <!-- PANEL EXCLUSIVO DE ADMINISTRADOR (Oculto por defecto) -->
+        <div id="panelAdmin" class="panel-admin">
+            <h3>🛡️ Zona de Administrador</h3>
+            <p>Registra a los nuevos agentes para darles acceso al portal.</p>
+            <form id="formNuevoAgente" class="form-agente">
+                <input type="email" id="nuevoCorreo" placeholder="Correo del agente" required>
+                <input type="text" id="nuevaPass" placeholder="Contraseña temporal" required>
+                <button type="submit" class="btn-rojo">Crear Agente</button>
+            </form>
+        </div>
+
         <div class="dashboard-header">
             <h2>Propiedades Disponibles</h2>
             <button id="btnNuevaPropiedad" class="btn-rojo">+ Registrar Casa</button>
         </div>
 
-        <!-- Cuadrícula de Casas (Inicia vacío esperando a Firebase) -->
-        <div class="grid-propiedades" id="listaPropiedades">
-            
-        </div>
+        <!-- Cuadrícula de Casas -->
+        <div class="grid-propiedades" id="listaPropiedades"></div>
     </main>
 
-    <!-- Ventana Modal para Registrar -->
+    <!-- Ventana Modal para Registrar Casa -->
     <div id="modalRegistro" class="modal">
         <div class="modal-content">
             <span class="cerrar-modal">&times;</span>
@@ -52,7 +62,6 @@
         </div>
     </div>
 
-    <!-- Archivo del dashboard como módulo -->
     <script type="module" src="js/dashboard.js"></script>
 </body>
 </html>
