@@ -3,112 +3,136 @@ import { collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. VERIFICAR ROL Y PERMISOS ---
+    // --- 1. VERIFICAR ROL Y CONFIGURAR SIDEBAR ---
     const rolActual = localStorage.getItem('rolActivo');
-    const panelAdmin = document.getElementById('panelAdmin');
     const saludoUsuario = document.getElementById('saludoUsuario');
-
+    const btnNavAgentes = document.getElementById('navAgentes');
+    
     if (rolActual === 'admin') {
-        panelAdmin.style.display = 'block'; // Muestra el panel si es admin
-        saludoUsuario.textContent = "Hola, Administrador";
+        saludoUsuario.textContent = "🛡️ Admin Activo";
+        btnNavAgentes.style.display = 'block'; // Mostrar opción de menú a admin
     } else {
-        panelAdmin.style.display = 'none'; // Lo oculta si es agente
-        saludoUsuario.textContent = "Hola, Agente";
+        saludoUsuario.textContent = "👋 Agente Activo";
     }
 
-    // --- 2. CERRAR SESIÓN ---
-    document.getElementById('btnCerrarSesion').addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('rolActivo'); // Borramos la memoria
-        window.location.href = 'index.html'; // Lo sacamos de la página
+    // --- 2. NAVEGACIÓN DEL MENÚ LATERAL ---
+    const btnPropiedades = document.getElementById('navPropiedades');
+    const seccionPropiedades = document.getElementById('seccionPropiedades');
+    const seccionAgentes = document.getElementById('seccionAgentes');
+
+    btnPropiedades.addEventListener('click', () => {
+        btnPropiedades.classList.add('activo');
+        btnNavAgentes.classList.remove('activo');
+        seccionPropiedades.className = 'seccion-activa';
+        seccionAgentes.className = 'seccion-oculta';
     });
 
-    // --- 3. REGISTRAR NUEVOS AGENTES (Solo Admin) ---
-    const formNuevoAgente = document.getElementById('formNuevoAgente');
-    if (formNuevoAgente) {
-        formNuevoAgente.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const correo = document.getElementById('nuevoCorreo').value;
-            const pass = document.getElementById('nuevaPass').value;
-            const boton = formNuevoAgente.querySelector('button');
+    btnNavAgentes.addEventListener('click', () => {
+        btnNavAgentes.classList.add('activo');
+        btnPropiedades.classList.remove('activo');
+        seccionAgentes.className = 'seccion-activa';
+        seccionPropiedades.className = 'seccion-oculta';
+    });
 
-            boton.textContent = "Creando...";
-            boton.disabled = true;
+    // Cerrar sesión
+    document.getElementById('btnCerrarSesion').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('rolActivo');
+        window.location.href = 'index.html';
+    });
 
-            try {
-                // Guardar nuevo agente en Firebase
-                await addDoc(collection(db, "usuarios"), {
-                    correo: correo,
-                    contrasena: pass,
-                    rol: "agente" // Los nuevos siempre son agentes
+    // --- 3. PREVISUALIZADOR DE FOTOS ---
+    const inputFotos = document.getElementById('inputFotos');
+    const previewContainer = document.getElementById('previewFotos');
+    let fotoPrincipalIndex = 0; // Por defecto la primera es la principal
+
+    inputFotos.addEventListener('change', function() {
+        previewContainer.innerHTML = ''; // Limpiar anteriores
+        const archivos = Array.from(this.files);
+
+        if(archivos.length === 0) return;
+
+        archivos.forEach((archivo, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const divContenedor = document.createElement('div');
+                divContenedor.className = `foto-box ${index === 0 ? 'principal' : ''}`;
+                divContenedor.innerHTML = `<img src="${e.target.result}">`;
+                
+                // Función para elegir la portada
+                divContenedor.addEventListener('click', () => {
+                    document.querySelectorAll('.foto-box').forEach(b => b.classList.remove('principal'));
+                    divContenedor.classList.add('principal');
+                    fotoPrincipalIndex = index;
                 });
-                alert(`¡El agente ${correo} fue creado con éxito! Ya puede iniciar sesión.`);
-                formNuevoAgente.reset();
-            } catch (error) {
-                alert("Hubo un error al crear al agente.");
-                console.error(error);
-            } finally {
-                boton.textContent = "Crear Agente";
-                boton.disabled = false;
-            }
-        });
-    }
 
-    // --- 4. MANEJO DE CASAS (Para todos) ---
-    const modal = document.getElementById('modalRegistro');
-    const btnAbrir = document.getElementById('btnNuevaPropiedad');
-    const btnCerrar = document.querySelector('.cerrar-modal');
-    const form = document.getElementById('formPropiedad');
+                previewContainer.appendChild(divContenedor);
+            };
+            reader.readAsDataURL(archivo);
+        });
+    });
+
+    // --- 4. CARGAR CASAS DESDE FIREBASE ---
     const listaPropiedades = document.getElementById('listaPropiedades');
 
     async function cargarCasasGuardadas() {
-        listaPropiedades.innerHTML = '<p style="padding: 20px;">Cargando propiedades desde la nube...</p>'; 
+        listaPropiedades.innerHTML = '<p style="padding: 20px;">Cargando inventario...</p>'; 
         try {
             const querySnapshot = await getDocs(collection(db, "casas"));
             listaPropiedades.innerHTML = ''; 
+            
             if (querySnapshot.empty) {
-                listaPropiedades.innerHTML = '<p style="padding: 20px;">No hay casas registradas aún.</p>';
+                listaPropiedades.innerHTML = '<p>No hay casas registradas aún.</p>';
                 return;
             }
             querySnapshot.forEach((doc) => {
                 const casa = doc.data();
-                crearTarjetaCasa(casa.titulo, casa.precio, casa.detalles);
+                crearTarjetaCasa(casa.titulo, casa.precio, casa.detalles, casa.descripcion);
             });
         } catch (error) {
-            console.error("Error al cargar las casas:", error);
-            listaPropiedades.innerHTML = '<p style="padding: 20px; color: red;">Hubo un error al cargar las propiedades.</p>';
+            console.error("Error al cargar:", error);
+            listaPropiedades.innerHTML = '<p style="color: red;">Error al cargar las propiedades.</p>';
         }
     }
 
-    function crearTarjetaCasa(titulo, precio, detalles) {
+    function crearTarjetaCasa(titulo, precio, detalles, descripcion = "Sin descripción") {
         const precioFormateado = Number(precio).toLocaleString('es-MX');
         const nuevaTarjeta = document.createElement('div');
         nuevaTarjeta.className = 'card-propiedad';
+        
+        // El diseño CSS 'object-fit: cover' encuadra la imagen automáticamente
         nuevaTarjeta.innerHTML = `
-            <div class="card-imagen" style="background-color: #ddd;">🏠</div>
+            <div class="card-imagen" style="background-color: #333;">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">🏠 Imagen Próximamente</div>
+            </div>
             <div class="card-info">
                 <h3>${titulo}</h3>
                 <p class="precio">$${precioFormateado} MXN</p>
-                <p class="detalles">${detalles}</p>
+                <p style="font-weight: bold; font-size: 14px;">${detalles}</p>
+                <p class="desc-corta">${descripcion}</p>
             </div>
         `;
         listaPropiedades.prepend(nuevaTarjeta);
     }
 
-    btnAbrir.addEventListener('click', () => modal.style.display = 'flex');
-    btnCerrar.addEventListener('click', () => modal.style.display = 'none');
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) modal.style.display = 'none';
-    });
+    // --- 5. MODAL Y GUARDADO DE DATOS (AÚN SIN SUBIR FOTOS) ---
+    const modal = document.getElementById('modalRegistro');
+    const formPropiedad = document.getElementById('formPropiedad');
 
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('btnNuevaPropiedad').addEventListener('click', () => modal.style.display = 'flex');
+    document.querySelector('.cerrar-modal').addEventListener('click', () => modal.style.display = 'none');
+
+    formPropiedad.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
         const titulo = document.getElementById('tituloCasa').value;
         const precio = document.getElementById('precioCasa').value;
         const detalles = document.getElementById('detallesCasa').value;
-        const botonGuardar = form.querySelector('button[type="submit"]');
-
-        botonGuardar.textContent = "Guardando...";
+        const descripcion = document.getElementById('descCasa').value;
+        
+        // NOTA: Para guardar las fotos reales necesitamos activar Storage en el siguiente paso.
+        const botonGuardar = formPropiedad.querySelector('button[type="submit"]');
+        botonGuardar.textContent = "Guardando Datos...";
         botonGuardar.disabled = true;
 
         try {
@@ -116,24 +140,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 titulo: titulo,
                 precio: precio,
                 detalles: detalles,
+                descripcion: descripcion,
                 fechaRegistro: new Date()
             });
 
-            if (listaPropiedades.innerHTML.includes("No hay casas")) {
-                listaPropiedades.innerHTML = '';
-            }
-            crearTarjetaCasa(titulo, precio, detalles);
-            form.reset();
+            crearTarjetaCasa(titulo, precio, detalles, descripcion);
+            formPropiedad.reset();
+            previewContainer.innerHTML = '';
             modal.style.display = 'none';
         } catch (error) {
-            alert("Error al guardar la propiedad. Revisa la consola.");
-            console.error("Error al guardar:", error);
+            alert("Error al guardar.");
+            console.error(error);
         } finally {
-            botonGuardar.textContent = "Guardar Propiedad";
+            botonGuardar.textContent = "Guardar Propiedad Completa";
             botonGuardar.disabled = false;
         }
     });
 
-    // Ejecutar al iniciar
     cargarCasasGuardadas();
 });

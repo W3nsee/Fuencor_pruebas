@@ -3,61 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Fuencor Inmobiliaria</title>
+    <title>Panel - Fuencor Inmobiliaria</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="dashboard-body">
-    <!-- Barra de Navegación -->
-    <nav class="navbar">
-        <img src="assets/image_0880c1.png" alt="Logo Fuencor" class="nav-logo">
-        <div class="nav-links">
-            <span id="saludoUsuario">Hola</span>
-            <a href="#" id="btnCerrarSesion" class="btn-salir">Cerrar Sesión</a>
-        </div>
-    </nav>
+<body class="admin-layout">
 
-    <!-- Contenido Principal -->
-    <main class="dashboard-container">
+    <!-- MENÚ LATERAL (SIDEBAR) -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="assets/image_0880c1.png" alt="Logo Fuencor" class="sidebar-logo">
+        </div>
         
-        <!-- PANEL EXCLUSIVO DE ADMINISTRADOR (Oculto por defecto) -->
-        <div id="panelAdmin" class="panel-admin">
-            <h3>🛡️ Zona de Administrador</h3>
-            <p>Registra a los nuevos agentes para darles acceso al portal.</p>
-            <form id="formNuevoAgente" class="form-agente">
-                <input type="email" id="nuevoCorreo" placeholder="Correo del agente" required>
-                <input type="text" id="nuevaPass" placeholder="Contraseña temporal" required>
-                <button type="submit" class="btn-rojo">Crear Agente</button>
-            </form>
+        <div class="user-info">
+            <span id="saludoUsuario">Hola, Usuario</span>
         </div>
 
-        <div class="dashboard-header">
-            <h2>Propiedades Disponibles</h2>
-            <button id="btnNuevaPropiedad" class="btn-rojo">+ Registrar Casa</button>
-        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-btn activo" id="navPropiedades">🏠 Propiedades</button>
+            <button class="nav-btn" id="navAgentes" style="display: none;">🛡️ Agentes (Admin)</button>
+        </nav>
 
-        <!-- Cuadrícula de Casas -->
-        <div class="grid-propiedades" id="listaPropiedades"></div>
+        <div class="sidebar-footer">
+            <button id="btnCerrarSesion" class="nav-btn salir">🚪 Cerrar Sesión</button>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        
+        <!-- SECCIÓN DE PROPIEDADES -->
+        <section id="seccionPropiedades" class="seccion-activa">
+            <div class="dashboard-header">
+                <h2>Inventario de Propiedades</h2>
+                <button id="btnNuevaPropiedad" class="btn-rojo">+ Registrar Casa</button>
+            </div>
+            <div class="grid-propiedades" id="listaPropiedades"></div>
+        </section>
+
+        <!-- SECCIÓN DE AGENTES (Solo Admin) -->
+        <section id="seccionAgentes" class="seccion-oculta">
+            <div class="dashboard-header">
+                <h2>Gestión de Agentes</h2>
+            </div>
+            <div class="panel-admin">
+                <p>Registra nuevos agentes para darles acceso al portal.</p>
+                <form id="formNuevoAgente" class="form-agente">
+                    <input type="email" id="nuevoCorreo" placeholder="Correo del agente" required>
+                    <input type="text" id="nuevaPass" placeholder="Contraseña temporal" required>
+                    <button type="submit" class="btn-rojo">Crear Agente</button>
+                </form>
+            </div>
+        </section>
+
     </main>
 
-    <!-- Ventana Modal para Registrar Casa -->
+    <!-- VENTANA MODAL AVANZADA PARA REGISTRAR CASAS -->
     <div id="modalRegistro" class="modal">
-        <div class="modal-content">
+        <div class="modal-content modal-largo">
             <span class="cerrar-modal">&times;</span>
             <h2>Registrar Nueva Propiedad</h2>
-            <form id="formPropiedad">
-                <div class="input-group">
-                    <label>Título de la Propiedad</label>
-                    <input type="text" id="tituloCasa" required>
+            
+            <form id="formPropiedad" class="form-grid">
+                <!-- Columna Izquierda: Datos -->
+                <div class="form-columna">
+                    <div class="input-group">
+                        <label>Título de la Propiedad</label>
+                        <input type="text" id="tituloCasa" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Precio (MXN)</label>
+                        <input type="number" id="precioCasa" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Detalles Rápidos (Ej. 3 Recámaras • 2 Baños)</label>
+                        <input type="text" id="detallesCasa" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Descripción Completa</label>
+                        <textarea id="descCasa" rows="4" placeholder="Describe los espacios, acabados, ubicación..." required></textarea>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>Precio (MXN)</label>
-                    <input type="number" id="precioCasa" required>
+
+                <!-- Columna Derecha: Fotos -->
+                <div class="form-columna">
+                    <div class="input-group">
+                        <label>Fotografías</label>
+                        <input type="file" id="inputFotos" multiple accept="image/*">
+                        <small>Sube varias fotos. Haz clic en una imagen abajo para marcarla como Portada.</small>
+                    </div>
+                    
+                    <!-- Previsualizador de imágenes -->
+                    <div id="previewFotos" class="preview-container">
+                        <!-- Las fotos aparecerán aquí mediante JS -->
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label>Detalles (Ej. 2 Recámaras, 1 Baño)</label>
-                    <input type="text" id="detallesCasa" required>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn-rojo btn-ancho">Guardar Propiedad Completa</button>
                 </div>
-                <button type="submit" class="btn-rojo">Guardar Propiedad</button>
             </form>
         </div>
     </div>
