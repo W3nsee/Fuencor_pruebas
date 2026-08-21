@@ -6,32 +6,31 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Fondo de la página usando un tono oscuro elegante */
 body {
-    background-color: #1a1a1a; /* Negro suave */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: #1a1a1a; 
 }
 
-/* Contenedor principal */
+/* --- ESTILOS DEL LOGIN --- */
 .login-container {
     width: 100%;
     max-width: 400px;
     padding: 20px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Tarjeta blanca para el formulario */
 .login-card {
     background-color: #ffffff;
     padding: 40px 30px;
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
     text-align: center;
+    width: 100%;
 }
 
-/* Ajustes del logo */
 .logo-container {
     margin-bottom: 20px;
 }
@@ -41,7 +40,6 @@ body {
     height: auto;
 }
 
-/* Textos */
 h2 {
     color: #000000;
     margin-bottom: 5px;
@@ -50,8 +48,35 @@ h2 {
 
 p {
     color: #666666;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     font-size: 14px;
+}
+
+/* Sistema de Alertas Personalizadas */
+.alerta {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.alerta.oculta {
+    display: none;
+}
+
+.alerta.exito {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alerta.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
 /* Grupos de inputs */
@@ -79,13 +104,12 @@ p {
 
 .input-group input:focus {
     outline: none;
-    border-color: #e30a17; /* Rojo Fuencor */
+    border-color: #e30a17; 
 }
 
-/* Botón Rojo Fuencor */
 .btn-rojo {
     width: 100%;
-    background-color: #e30a17; /* Rojo extraído del logo */
+    background-color: #e30a17; 
     color: #ffffff;
     padding: 12px;
     border: none;
@@ -98,23 +122,12 @@ p {
 }
 
 .btn-rojo:hover {
-    background-color: #b30812; /* Rojo más oscuro al pasar el mouse */
+    background-color: #b30812; 
 }
 
-/* Enlaces */
-.footer-text {
-    margin-top: 20px;
-}
-
-.footer-text a {
-    color: #333333;
-    text-decoration: none;
-    font-size: 13px;
-    transition: color 0.3s;
-}
-
-.footer-text a:hover {
-    color: #e30a17;
+.btn-rojo:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
 /* --- ESTILOS DEL DASHBOARD --- */
@@ -124,7 +137,6 @@ p {
     height: auto;
 }
 
-/* Navbar */
 .navbar {
     background-color: #1a1a1a;
     padding: 15px 40px;
@@ -145,7 +157,6 @@ p {
     font-weight: bold;
 }
 
-/* Contenedor */
 .dashboard-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -163,7 +174,6 @@ p {
     font-size: 28px;
 }
 
-/* Grid de Propiedades */
 .grid-propiedades {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -201,7 +211,6 @@ p {
     margin-bottom: 5px;
 }
 
-/* Modal (Ventana emergente) */
 .modal {
     display: none;
     position: fixed;
